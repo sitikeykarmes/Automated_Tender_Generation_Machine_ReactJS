@@ -6,10 +6,10 @@ export default function ProtectedData() {
 
   useEffect(() => {
     const fetchProtected = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       try {
-        const res = await axios.get('http://localhost:5000/api/protected', {
-          headers: { Authorization: token }
+        const res = await axios.get("http://localhost:5000/api/protected", {
+          headers: { Authorization: token },
         });
         setMessage(res.data.msg);
       } catch (err) {
