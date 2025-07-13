@@ -10,9 +10,13 @@ export default function Navbar() {
         <img src={logo} alt="Logo" className="w-10" />
       </Link>
       <div className="flex items-center space-x-6">
-        <Link to="/" className="text-black font-semibold">Home</Link>
+        <Link to="/" className="text-black font-semibold">
+          Home
+        </Link>
         <span className="text-gray-400">|</span>
-        <a href="#" className="text-black font-semibold">About</a>
+        <a href="#" className="text-black font-semibold">
+          About
+        </a>
         <div className="flex items-center border rounded px-2">
           <input
             type="text"
@@ -25,7 +29,9 @@ export default function Navbar() {
         </div>
         <div className="flex items-center space-x-2">
           <img src={user} alt="User" className="w-5" />
-          <a href="#" className="text-black">Login</a>
+          <Link to="/login" className="text-black">
+            Login
+          </Link>
         </div>
       </div>
     </nav>
