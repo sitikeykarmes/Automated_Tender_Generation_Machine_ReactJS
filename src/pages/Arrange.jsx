@@ -101,8 +101,33 @@ export default function Arrange() {
     setCriteriaOrder((prev) => prev.filter((id) => id !== catId));
   };
 
+  // Save tender to history
+  const saveTenderToHistory = async () => {
+    if (!user) return;
+    
+    try {
+      setSaving(true);
+      const tenderData = {
+        title: `Tender ${new Date().toLocaleDateString()}`,
+        categories: selected,
+        categoriesOrder: criteriaOrder
+      };
+      
+      await tenderAPI.saveTender(tenderData);
+    } catch (error) {
+      console.error("Error saving tender:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // Print PDF with descriptions
-  const handlePrint = () => {
+  const handlePrint = async () => {
+    // Save to history before generating PDF
+    if (user) {
+      await saveTenderToHistory();
+    }
+
     import("jspdf").then(({ jsPDF }) => {
       const doc = new jsPDF();
       let y = 20;
