@@ -48,8 +48,10 @@ function SortableItem({ id, children }) {
 
 export default function Arrange() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selected, setSelected] = useState({});
   const [criteriaOrder, setCriteriaOrder] = useState([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("selectedcat")) || {};
