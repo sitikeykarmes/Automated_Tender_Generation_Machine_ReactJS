@@ -231,8 +231,9 @@ export default function Arrange() {
           <button
             className="bg-green-600 text-white px-5 py-2 rounded"
             onClick={handlePrint}
+            disabled={saving}
           >
-            Print PDF
+            {saving ? "Saving..." : "Print PDF"}
           </button>
         </div>
       </div>
