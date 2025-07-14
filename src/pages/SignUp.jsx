@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Mail, Lock, User } from "lucide-react";
 import { GoogleIcon, FacebookIcon } from "../components/CustomIcons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -11,7 +12,10 @@ export default function SignUp() {
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [token, setToken] = useState("");
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const validateInputs = () => {
     let isValid = true;
@@ -40,20 +44,27 @@ export default function SignUp() {
     return isValid;
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     if (!validateInputs()) return;
-
-    // Simulate sign-up success
-    const mockResponse = {
-      data: {
-        token: "mock-signup-token-" + Date.now(),
-        user: { name, email },
-      },
-    };
-
-    setToken(mockResponse.data.token);
-    alert("Sign up successful!");
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        login(data.user, data.token); // Save user and token in context/localStorage
+        alert("Sign up successful!");
+        // Redirect to previous page or /account
+        navigate(location.state?.from || "/account", { replace: true });
+      } else {
+        alert(data.msg || "Sign up failed");
+      }
+    } catch (err) {
+      alert("Sign up failed");
+    }
   };
 
   return (
@@ -211,15 +222,6 @@ export default function SignUp() {
               </Link>
             </p>
           </div>
-
-          {/* Debug token */}
-          {token && (
-            <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-              <p className="text-sm text-green-800 dark:text-green-200">
-                Signed up successfully! Token: {token.substring(0, 20)}...
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>

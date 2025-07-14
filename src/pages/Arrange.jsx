@@ -131,16 +131,22 @@ export default function Arrange() {
 
   return (
     <div>
-      <Navbar />
       <div className="max-w-3xl mx-auto mt-8 px-4">
-        <h2 className="text-xl font-bold text-center mb-6">Arrange Selected Categories</h2>
-        <h3 className="text-m font-bold text-center mb-6">Drag and Drop in your desired order.</h3>
+        <h2 className="text-xl font-bold text-center mb-6">
+          Arrange Selected Categories
+        </h2>
+        <h3 className="text-m font-bold text-center mb-6">
+          Drag and Drop in your desired order.
+        </h3>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleCriteriaDragEnd}
         >
-          <SortableContext items={criteriaOrder} strategy={verticalListSortingStrategy}>
+          <SortableContext
+            items={criteriaOrder}
+            strategy={verticalListSortingStrategy}
+          >
             <ul>
               {criteriaOrder.map((catId) => {
                 const cat = criteriaData.find((c) => c.id === catId);
@@ -161,7 +167,9 @@ export default function Arrange() {
                     <DndContext
                       sensors={sensors}
                       collisionDetection={closestCenter}
-                      onDragEnd={(event) => handleSubcriteriaDragEnd(catId, event)}
+                      onDragEnd={(event) =>
+                        handleSubcriteriaDragEnd(catId, event)
+                      }
                     >
                       <SortableContext
                         items={selected[catId]}

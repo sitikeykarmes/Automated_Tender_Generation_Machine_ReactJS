@@ -20,7 +20,6 @@ export default function Home() {
 
   return (
     <div>
-      <Navbar />
       <h2 className="text-2xl font-bold text-center mt-6">Categories</h2>
       <div className="max-w-2xl mx-auto mt-4">
         <CategoryList

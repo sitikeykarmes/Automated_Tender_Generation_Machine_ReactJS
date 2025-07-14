@@ -3,21 +3,27 @@ import Home from "./pages/Home";
 import Arrange from "./pages/Arrange";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-
+import Account from "./pages/Account";
+import { AuthProvider } from "./context/AuthContext";
 import ProtectedData from "../src/components/ProtectedData";
+import Navbar from "./components/Navbar";
 // ... inside your component tree:
 <ProtectedData />;
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/arrange" element={<Arrange />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/arrange" element={<Arrange />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/account" element={<Account />} /> {/* Profile page */}
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { GoogleIcon, FacebookIcon } from "../components/CustomIcons";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -10,8 +11,11 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [token, setToken] = useState("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const validateInputs = () => {
     let isValid = true;
@@ -35,19 +39,22 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     if (!validateInputs()) return;
-
     try {
-      const mockResponse = {
-        data: {
-          token: "mock-jwt-token-" + Date.now(),
-          user: { username },
-        },
-      };
-
-      setToken(mockResponse.data.token);
-      alert("Login successful!");
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: username, password }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        login(data.user, data.token); // Save user and token in context/localStorage
+        alert("Login successful!");
+        // Redirect to previous page or /account
+        navigate(location.state?.from || "/account", { replace: true });
+      } else {
+        alert(data.msg || "Login failed");
+      }
     } catch (err) {
       alert("Login failed");
     }
@@ -255,15 +262,6 @@ export default function Login() {
                   </button>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Debug token */}
-          {token && (
-            <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-              <p className="text-sm text-green-800 dark:text-green-200">
-                Logged in successfully! Token: {token.substring(0, 20)}...
-              </p>
             </div>
           )}
         </div>

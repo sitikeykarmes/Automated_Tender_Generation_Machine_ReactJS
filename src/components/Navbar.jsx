@@ -1,9 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
-import user from "../assets/user.png";
+import userImg from "../assets/user.png";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
+  const location = useLocation();
+
   return (
     <nav className="flex items-center justify-between px-8 py-4 bg-white shadow">
       <Link to="/">
@@ -28,10 +32,25 @@ export default function Navbar() {
           </button>
         </div>
         <div className="flex items-center space-x-2">
-          <img src={user} alt="User" className="w-5" />
-          <Link to="/login" className="text-black">
-            Login
-          </Link>
+          <img src={userImg} alt="User" className="w-5" />
+          {user ? (
+            <>
+              <Link to="/account" className="text-black">
+                Your Account
+              </Link>
+              <button onClick={logout} className="ml-2 text-xs text-red-500">
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              state={{ from: location.pathname }}
+              className="text-black"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>
