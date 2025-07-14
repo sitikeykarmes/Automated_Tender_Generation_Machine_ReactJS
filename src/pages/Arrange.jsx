@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
+import { tenderAPI } from "../api";
 import { criteriaData } from "../data/criteriaData";
 import {
   DndContext,
