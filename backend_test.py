@@ -183,7 +183,99 @@ class BackendTester:
             self.log_test("Save Tender", False, f"Request failed: {str(e)}")
             return False
     
-    def test_get_tender_history(self):
+    def test_save_draft_tender(self):
+        """Test saving a draft tender with sector field"""
+        if not self.auth_token:
+            self.log_test("Save Draft Tender", False, "No auth token available")
+            return False
+        
+        tender_data = {
+            "title": "Healthcare Tender Draft",
+            "sector": "Healthcare",
+            "categories": {
+                "Medical Equipment": ["0", "1"],
+                "Staff Requirements": ["2", "3"]
+            },
+            "categoriesOrder": ["Medical Equipment", "Staff Requirements"],
+            "isDraft": True
+        }
+        
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            response = requests.post(f"{self.base_url}/tenders/save", json=tender_data, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'tender' in data and '_id' in data['tender']:
+                    # Verify the draft status and sector are saved correctly
+                    saved_tender = data['tender']
+                    if saved_tender.get('isDraft') == True and saved_tender.get('sector') == 'Healthcare':
+                        self.log_test("Save Draft Tender", True, "Draft tender with sector saved successfully")
+                        return True
+                    else:
+                        self.log_test("Save Draft Tender", False, f"Draft status or sector not saved correctly: isDraft={saved_tender.get('isDraft')}, sector={saved_tender.get('sector')}")
+                        return False
+                else:
+                    self.log_test("Save Draft Tender", False, "Response missing tender data", data)
+                    return False
+            else:
+                self.log_test("Save Draft Tender", False, f"Save failed with status {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Save Draft Tender", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_analytics_endpoint(self):
+        """Test the new analytics endpoint"""
+        if not self.auth_token:
+            self.log_test("Analytics Endpoint", False, "No auth token available")
+            return False
+        
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            response = requests.get(f"{self.base_url}/tenders/analytics", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check if all expected analytics fields are present
+                expected_fields = [
+                    'totalTenders', 'tendersThisMonth', 'tendersThisWeek',
+                    'draftTenders', 'finalizedTenders', 'categoryCount',
+                    'mostUsedCategories', 'mostUsedSectors', 'averagePreparationTime'
+                ]
+                
+                missing_fields = [field for field in expected_fields if field not in data]
+                
+                if not missing_fields:
+                    # Verify data types and structure
+                    if (isinstance(data['totalTenders'], int) and
+                        isinstance(data['tendersThisMonth'], int) and
+                        isinstance(data['tendersThisWeek'], int) and
+                        isinstance(data['draftTenders'], int) and
+                        isinstance(data['finalizedTenders'], int) and
+                        isinstance(data['categoryCount'], dict) and
+                        isinstance(data['mostUsedCategories'], list) and
+                        isinstance(data['mostUsedSectors'], list)):
+                        
+                        self.log_test("Analytics Endpoint", True, f"Analytics data retrieved successfully with {data['totalTenders']} total tenders")
+                        return True
+                    else:
+                        self.log_test("Analytics Endpoint", False, "Analytics data has incorrect types", data)
+                        return False
+                else:
+                    self.log_test("Analytics Endpoint", False, f"Missing analytics fields: {missing_fields}", data)
+                    return False
+            else:
+                self.log_test("Analytics Endpoint", False, f"Request failed with status {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Analytics Endpoint", False, f"Request failed: {str(e)}")
+            return False
         """Test retrieving tender history"""
         if not self.auth_token:
             self.log_test("Get Tender History", False, "No auth token available")
