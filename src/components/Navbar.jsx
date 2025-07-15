@@ -57,8 +57,15 @@ export default function Navbar() {
               <span>Home</span>
             </Link>
 
-            <Link
-              to="/select-categories"
+            <button
+              onClick={() => {
+                if (user) {
+                  window.location.href = "/select-categories";
+                } else {
+                  alert("Please log in to create a tender.");
+                  window.location.href = "/login";
+                }
+              }}
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive("/select-categories")
                   ? "text-blue-600 bg-blue-50"
@@ -67,7 +74,7 @@ export default function Navbar() {
             >
               <FileText className="w-4 h-4" />
               <span>Create Tender</span>
-            </Link>
+            </button>
 
             <a
               href="#about"
@@ -165,9 +172,16 @@ export default function Navbar() {
               <span>Home</span>
             </Link>
 
-            <Link
-              to="/select-categories"
-              onClick={() => setIsMenuOpen(false)}
+            <button
+              onClick={() => {
+                setIsMenuOpen(false);
+                if (user) {
+                  window.location.href = "/select-categories";
+                } else {
+                  alert("Please log in to create a tender.");
+                  window.location.href = "/login";
+                }
+              }}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors ${
                 isActive("/select-categories")
                   ? "text-blue-600 bg-blue-50"
@@ -176,7 +190,7 @@ export default function Navbar() {
             >
               <FileText className="w-5 h-5" />
               <span>Create Tender</span>
-            </Link>
+            </button>
 
             <a
               href="#about"

@@ -11,18 +11,17 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-
 import {
   arrayMove,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
 import { CSS } from "@dnd-kit/utilities";
+
 import { GripVertical, Trash2, X, Plus, FileText } from "lucide-react";
 
-// Sortable Item Wrapper
+// SortableItem with drag handle support
 function SortableItem({ id, children }) {
   const {
     attributes,
@@ -40,13 +39,8 @@ function SortableItem({ id, children }) {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners} // ✅ Correct listener placement
-    >
-      {children}
+    <div ref={setNodeRef} style={style} {...attributes}>
+      {children({ dragHandleProps: listeners })}
     </div>
   );
 }
@@ -58,68 +52,60 @@ export default function Arrange() {
   const [criteriaOrder, setCriteriaOrder] = useState([]);
   const [saving, setSaving] = useState(false);
 
+  const sensors = useSensors(useSensor(PointerSensor));
+
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("selectedcat")) || {};
     setSelected(data);
     setCriteriaOrder(Object.keys(data));
   }, []);
 
-  // Sensors - use once globally
-  const sensors = useSensors(useSensor(PointerSensor));
-
-  const hasCategories = criteriaOrder.length > 0;
-
-  function handleCriteriaDragEnd(event) {
-    const { active, over } = event;
+  const handleCriteriaDragEnd = ({ active, over }) => {
     if (active.id !== over?.id) {
-      setCriteriaOrder((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
+      setCriteriaOrder((items) =>
+        arrayMove(items, items.indexOf(active.id), items.indexOf(over.id))
+      );
     }
-  }
+  };
 
-  function handleSubcriteriaDragEnd(catId, event) {
-    const { active, over } = event;
+  const handleSubcriteriaDragEnd = (catId, { active, over }) => {
     if (active.id !== over?.id) {
       setSelected((prev) => {
-        const oldSubOrder = prev[catId];
-        const oldIndex = oldSubOrder.indexOf(active.id);
-        const newIndex = oldSubOrder.indexOf(over.id);
-        const newSubOrder = arrayMove(oldSubOrder, oldIndex, newIndex);
-        const updated = {
-          ...prev,
-          [catId]: newSubOrder,
-        };
+        const oldOrder = prev[catId];
+        const updatedOrder = arrayMove(
+          oldOrder,
+          oldOrder.indexOf(active.id),
+          oldOrder.indexOf(over.id)
+        );
+        const updated = { ...prev, [catId]: updatedOrder };
         localStorage.setItem("selectedcat", JSON.stringify(updated));
         return updated;
       });
     }
-  }
+  };
 
   const handleDeleteCategory = (catId) => {
     setSelected((prev) => {
-      const newSelected = { ...prev };
-      delete newSelected[catId];
-      localStorage.setItem("selectedcat", JSON.stringify(newSelected));
-      return newSelected;
+      const updated = { ...prev };
+      delete updated[catId];
+      localStorage.setItem("selectedcat", JSON.stringify(updated));
+      return updated;
     });
     setCriteriaOrder((prev) => prev.filter((id) => id !== catId));
   };
 
   const handleRemoveSubcriteria = (catId, subIdx) => {
     setSelected((prev) => {
-      const newSelected = { ...prev };
-      newSelected[catId] = newSelected[catId].filter((idx) => idx !== subIdx);
+      const updated = { ...prev };
+      updated[catId] = updated[catId].filter((idx) => idx !== subIdx);
 
-      if (newSelected[catId].length === 0) {
-        delete newSelected[catId];
-        setCriteriaOrder((prevOrder) => prevOrder.filter((id) => id !== catId));
+      if (updated[catId].length === 0) {
+        delete updated[catId];
+        setCriteriaOrder((prev) => prev.filter((id) => id !== catId));
       }
 
-      localStorage.setItem("selectedcat", JSON.stringify(newSelected));
-      return newSelected;
+      localStorage.setItem("selectedcat", JSON.stringify(updated));
+      return updated;
     });
   };
 
@@ -133,21 +119,26 @@ export default function Arrange() {
     if (!user) return;
     try {
       setSaving(true);
-      const tenderData = {
+      await tenderAPI.saveTender({
         title: `Tender ${new Date().toLocaleDateString()}`,
         categories: selected,
         categoriesOrder: criteriaOrder,
-      };
-      await tenderAPI.saveTender(tenderData);
-    } catch (error) {
-      console.error("Error saving tender:", error);
+      });
+    } catch (err) {
+      console.error("Error saving tender:", err);
     } finally {
       setSaving(false);
     }
   };
 
   const handlePrint = async () => {
-    if (user) await saveTenderToHistory();
+    if (!user) {
+      alert("Please log in to generate the tender.");
+      navigate("/login"); // or show modal if preferred
+      return;
+    }
+
+    await saveTenderToHistory();
 
     import("jspdf").then(({ jsPDF }) => {
       const doc = new jsPDF();
@@ -175,13 +166,15 @@ export default function Arrange() {
     });
   };
 
+  const hasCategories = criteriaOrder.length > 0;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-6xl mx-auto px-4 py-12 text-center">
           <h1 className="text-4xl font-bold mb-4">Arrange Tender Categories</h1>
           <p className="text-lg text-gray-600">
-            Drag and drop to reorder categories and their criteria.
+            Drag and drop to reorder categories and criteria.
           </p>
           {hasCategories && (
             <div className="mt-6 flex justify-center items-center gap-4">
@@ -238,72 +231,86 @@ export default function Arrange() {
 
                     return (
                       <SortableItem key={catId} id={catId}>
-                        <div className="bg-gray-50 rounded-lg border p-5">
-                          <div className="flex justify-between items-center mb-3">
-                            <div className="flex items-center gap-2">
-                              <GripVertical className="w-5 h-5 text-gray-400" />
-                              <h3 className="font-semibold text-lg">
-                                {cat.title}
-                              </h3>
-                              <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                                {selected[catId].length} items
-                              </span>
-                            </div>
-                            <button
-                              className="text-red-600 hover:text-red-800"
-                              onClick={() => handleDeleteCategory(catId)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-
-                          <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={(e) =>
-                              handleSubcriteriaDragEnd(catId, e)
-                            }
-                          >
-                            <SortableContext
-                              items={selected[catId]}
-                              strategy={verticalListSortingStrategy}
-                            >
-                              <div className="space-y-3">
-                                {selected[catId].map((subIdx) => {
-                                  const sub = cat.sub[subIdx];
-                                  return (
-                                    <SortableItem key={subIdx} id={subIdx}>
-                                      <div className="bg-white border rounded p-4 flex justify-between items-start">
-                                        <div className="flex items-start gap-3">
-                                          <GripVertical className="w-4 h-4 text-gray-400 mt-1" />
-                                          <div>
-                                            <h4 className="font-medium text-gray-800">
-                                              {sub.label}
-                                            </h4>
-                                            <p className="text-sm text-gray-600">
-                                              {sub.description}
-                                            </p>
-                                          </div>
-                                        </div>
-                                        <button
-                                          className="text-red-500 hover:text-red-700 p-1"
-                                          onClick={() =>
-                                            handleRemoveSubcriteria(
-                                              catId,
-                                              subIdx
-                                            )
-                                          }
-                                        >
-                                          <X className="w-4 h-4" />
-                                        </button>
-                                      </div>
-                                    </SortableItem>
-                                  );
-                                })}
+                        {({ dragHandleProps }) => (
+                          <div className="bg-gray-50 rounded-lg border p-5">
+                            <div className="flex justify-between items-center mb-3">
+                              <div className="flex items-center gap-2">
+                                <div
+                                  {...dragHandleProps}
+                                  className="cursor-grab hover:cursor-grabbing"
+                                >
+                                  <GripVertical className="w-5 h-5 text-gray-400" />
+                                </div>
+                                <h3 className="font-semibold text-lg">
+                                  {cat.title}
+                                </h3>
+                                <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                  {selected[catId].length} items
+                                </span>
                               </div>
-                            </SortableContext>
-                          </DndContext>
-                        </div>
+                              <button
+                                onClick={() => handleDeleteCategory(catId)}
+                                className="text-red-600 hover:text-red-800"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+
+                            <DndContext
+                              sensors={sensors}
+                              collisionDetection={closestCenter}
+                              onDragEnd={(e) =>
+                                handleSubcriteriaDragEnd(catId, e)
+                              }
+                            >
+                              <SortableContext
+                                items={selected[catId]}
+                                strategy={verticalListSortingStrategy}
+                              >
+                                <div className="space-y-3">
+                                  {selected[catId].map((subIdx) => {
+                                    const sub = cat.sub[subIdx];
+                                    return (
+                                      <SortableItem key={subIdx} id={subIdx}>
+                                        {({ dragHandleProps }) => (
+                                          <div className="bg-white border rounded p-4 flex justify-between items-start">
+                                            <div className="flex items-start gap-3">
+                                              <div
+                                                {...dragHandleProps}
+                                                className="cursor-grab hover:cursor-grabbing mt-1"
+                                              >
+                                                <GripVertical className="w-4 h-4 text-gray-400" />
+                                              </div>
+                                              <div>
+                                                <h4 className="font-medium text-gray-800">
+                                                  {sub.label}
+                                                </h4>
+                                                <p className="text-sm text-gray-600">
+                                                  {sub.description}
+                                                </p>
+                                              </div>
+                                            </div>
+                                            <button
+                                              onClick={() =>
+                                                handleRemoveSubcriteria(
+                                                  catId,
+                                                  subIdx
+                                                )
+                                              }
+                                              className="text-red-500 hover:text-red-700 p-1"
+                                            >
+                                              <X className="w-4 h-4" />
+                                            </button>
+                                          </div>
+                                        )}
+                                      </SortableItem>
+                                    );
+                                  })}
+                                </div>
+                              </SortableContext>
+                            </DndContext>
+                          </div>
+                        )}
                       </SortableItem>
                     );
                   })}
@@ -322,9 +329,13 @@ export default function Arrange() {
               ← Back to Selection
             </button>
             <button
-              className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-2"
+              className={`px-6 py-3 ${
+                user
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-gray-300 cursor-not-allowed"
+              } text-white rounded flex items-center gap-2`}
               onClick={handlePrint}
-              disabled={saving}
+              disabled={!user || saving}
             >
               <FileText className="w-4 h-4" />
               {saving ? "Saving..." : "Generate PDF"}
