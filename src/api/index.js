@@ -31,6 +31,7 @@ export const tenderAPI = {
   getTenderHistory: () => api.get('/tenders/history'),
   getTender: (id) => api.get(`/tenders/${id}`),
   deleteTender: (id) => api.delete(`/tenders/${id}`),
+  getAnalytics: () => api.get('/tenders/analytics'),
 };
 
 export default api;
