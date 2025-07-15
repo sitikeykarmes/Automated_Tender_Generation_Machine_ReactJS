@@ -1,3 +1,19 @@
+// Sector-based templates mapping
+export const sectors = [
+  { id: 'government', name: 'Government', priority: ['C4', 'C1', 'C2', 'C8', 'C5', 'C6', 'C3', 'C9', 'C7'] },
+  { id: 'business', name: 'Business', priority: ['C2', 'C3', 'C1', 'C7', 'C6', 'C4', 'C8', 'C5', 'C9'] },
+  { id: 'healthcare', name: 'Healthcare', priority: ['C1', 'C8', 'C4', 'C5', 'C2', 'C6', 'C3', 'C9', 'C7'] },
+  { id: 'companies', name: 'Companies', priority: ['C2', 'C3', 'C1', 'C6', 'C4', 'C7', 'C8', 'C5', 'C9'] },
+  { id: 'construction', name: 'Construction', priority: ['C8', 'C1', 'C2', 'C5', 'C4', 'C6', 'C3', 'C9', 'C7'] },
+  { id: 'transportation', name: 'Transportation', priority: ['C8', 'C1', 'C4', 'C2', 'C5', 'C6', 'C3', 'C9', 'C7'] },
+  { id: 'it', name: 'Information Technology (IT)', priority: ['C1', 'C7', 'C2', 'C3', 'C6', 'C4', 'C8', 'C5', 'C9'] },
+  { id: 'retail', name: 'Retail', priority: ['C2', 'C1', 'C3', 'C6', 'C4', 'C7', 'C8', 'C5', 'C9'] },
+  { id: 'manufacturing', name: 'Manufacturing', priority: ['C1', 'C8', 'C2', 'C5', 'C4', 'C6', 'C3', 'C9', 'C7'] },
+  { id: 'housing', name: 'Housing', priority: ['C1', 'C8', 'C4', 'C5', 'C2', 'C6', 'C3', 'C9', 'C7'] },
+  { id: 'education', name: 'Education', priority: ['C1', 'C4', 'C2', 'C5', 'C8', 'C6', 'C3', 'C9', 'C7'] },
+  { id: 'consultancy', name: 'Consultancy', priority: ['C3', 'C1', 'C2', 'C6', 'C4', 'C7', 'C8', 'C5', 'C9'] }
+];
+
 export const criteriaData = [
   {
     id: "C1",
