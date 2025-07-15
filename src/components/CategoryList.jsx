@@ -1,7 +1,7 @@
 import React from "react";
 import CategoryItem from "./CategoryItem";
 
-export default function CategoryList({ data, selected, setSelected }) {
+export default function CategoryList({ data, selected, setSelected, priorityOrder = [] }) {
   const handleSubcriteriaChange = (catId, subIdx) => {
     setSelected((prev) => {
       const prevSubs = prev[catId] || [];
@@ -17,14 +17,21 @@ export default function CategoryList({ data, selected, setSelected }) {
 
   return (
     <div>
-      {data.map((cat) => (
-        <CategoryItem
-          key={cat.id}
-          cat={cat}
-          selected={selected[cat.id] || []}
-          onSubcriteriaChange={handleSubcriteriaChange}
-        />
-      ))}
+      {data.map((cat, index) => {
+        const isPriority = priorityOrder.includes(cat.id);
+        const priorityIndex = priorityOrder.indexOf(cat.id);
+        
+        return (
+          <CategoryItem
+            key={cat.id}
+            cat={cat}
+            selected={selected[cat.id] || []}
+            onSubcriteriaChange={handleSubcriteriaChange}
+            isPriority={isPriority}
+            priorityIndex={priorityIndex}
+          />
+        );
+      })}
     </div>
   );
 }
