@@ -442,6 +442,8 @@ class BackendTester:
             self.test_unauthorized_access,
             self.test_invalid_token_access,
             self.test_save_tender,
+            self.test_save_draft_tender,
+            self.test_analytics_endpoint,
             self.test_get_tender_history,
             self.test_get_tender_by_id,
             self.test_delete_tender,
