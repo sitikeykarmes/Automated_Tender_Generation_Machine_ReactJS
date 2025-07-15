@@ -5,6 +5,7 @@ import Arrange from "./pages/Arrange";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Account from "./pages/Account";
+import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedData from "../src/components/ProtectedData";
 import Navbar from "./components/Navbar";
