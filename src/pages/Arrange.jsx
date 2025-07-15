@@ -52,14 +52,19 @@ export default function Arrange() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [selected, setSelected] = useState({});
+  const [selectedSector, setSelectedSector] = useState(null);
   const [criteriaOrder, setCriteriaOrder] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [exporting, setExporting] = useState('');
 
   const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("selectedcat")) || {};
+    const sector = JSON.parse(localStorage.getItem("selectedSector")) || null;
     setSelected(data);
+    setSelectedSector(sector);
     setCriteriaOrder(Object.keys(data));
   }, []);
 
