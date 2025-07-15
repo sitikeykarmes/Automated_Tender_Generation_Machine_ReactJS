@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { tenderAPI } from "../api";
 import { criteriaData } from "../data/criteriaData";
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 
 import {
   DndContext,
@@ -19,7 +22,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { GripVertical, Trash2, X, Plus, FileText } from "lucide-react";
+import { GripVertical, Trash2, X, Plus, FileText, Eye, Download, Printer } from "lucide-react";
 
 // SortableItem with drag handle support
 function SortableItem({ id, children }) {
