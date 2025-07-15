@@ -123,14 +123,16 @@ export default function Arrange() {
     localStorage.removeItem("selectedcat");
   };
 
-  const saveTenderToHistory = async () => {
+  const saveTenderToHistory = async (isDraft = false) => {
     if (!user) return;
     try {
       setSaving(true);
       await tenderAPI.saveTender({
         title: `Tender ${new Date().toLocaleDateString()}`,
+        sector: selectedSector?.id || 'general',
         categories: selected,
         categoriesOrder: criteriaOrder,
+        isDraft: isDraft
       });
     } catch (err) {
       console.error("Error saving tender:", err);
@@ -139,23 +141,35 @@ export default function Arrange() {
     }
   };
 
-  const handlePrint = async () => {
+  const generatePDF = async () => {
     if (!user) {
       alert("Please log in to generate the tender.");
-      navigate("/login"); // or show modal if preferred
+      navigate("/login");
       return;
     }
 
-    await saveTenderToHistory();
+    await saveTenderToHistory(false);
 
     import("jspdf").then(({ jsPDF }) => {
       const doc = new jsPDF();
       let y = 20;
       doc.setFontSize(16);
+      doc.text("Tender Document", 20, y);
+      y += 10;
+      
+      if (selectedSector) {
+        doc.setFontSize(12);
+        doc.text(`Sector: ${selectedSector.name}`, 20, y);
+        y += 10;
+      }
+      
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, y);
+      y += 15;
 
       criteriaOrder.forEach((catId) => {
         const cat = criteriaData.find((c) => c.id === catId);
         if (!cat) return;
+        doc.setFontSize(14);
         doc.text(cat.title, 20, y);
         y += 10;
         doc.setFontSize(12);
@@ -167,11 +181,170 @@ export default function Arrange() {
           y += 10;
         });
         y += 5;
-        doc.setFontSize(16);
       });
 
       doc.save("tender_criteria.pdf");
     });
+    setShowPreviewModal(false);
+  };
+
+  const exportToExcel = async () => {
+    setExporting('excel');
+    await saveTenderToHistory(false);
+    
+    const workbook = XLSX.utils.book_new();
+    const worksheetData = [];
+    
+    // Add header
+    worksheetData.push(['Category', 'Subcriteria', 'Description']);
+    
+    criteriaOrder.forEach((catId) => {
+      const cat = criteriaData.find((c) => c.id === catId);
+      if (!cat) return;
+      
+      (selected[catId] || []).forEach((subIdx) => {
+        const sub = cat.sub[subIdx];
+        worksheetData.push([cat.title, sub.label, sub.description]);
+      });
+    });
+    
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tender Criteria");
+    
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(data, 'tender_criteria.xlsx');
+    setExporting('');
+    setShowPreviewModal(false);
+  };
+
+  const exportToWord = async () => {
+    setExporting('word');
+    await saveTenderToHistory(false);
+    
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Tender Document",
+                  bold: true,
+                  size: 32,
+                }),
+              ],
+              heading: HeadingLevel.TITLE,
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Generated on: ${new Date().toLocaleDateString()}`,
+                  italics: true,
+                }),
+              ],
+            }),
+            selectedSector && new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Sector: ${selectedSector.name}`,
+                  bold: true,
+                }),
+              ],
+            }),
+            new Paragraph({ text: "" }),
+            ...criteriaOrder.flatMap((catId) => {
+              const cat = criteriaData.find((c) => c.id === catId);
+              if (!cat) return [];
+              
+              return [
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                      text: cat.title,
+                      bold: true,
+                      size: 24,
+                    }),
+                  ],
+                  heading: HeadingLevel.HEADING_1,
+                }),
+                ...(selected[catId] || []).flatMap((subIdx) => {
+                  const sub = cat.sub[subIdx];
+                  return [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: sub.label,
+                          bold: true,
+                        }),
+                      ],
+                    }),
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: sub.description,
+                        }),
+                      ],
+                    }),
+                    new Paragraph({ text: "" }),
+                  ];
+                }),
+              ];
+            }).filter(Boolean),
+          ],
+        },
+      ],
+    });
+    
+    const buffer = await Packer.toBlob(doc);
+    saveAs(buffer, 'tender_criteria.docx');
+    setExporting('');
+    setShowPreviewModal(false);
+  };
+
+  const exportToJSON = async () => {
+    setExporting('json');
+    await saveTenderToHistory(false);
+    
+    const tenderData = {
+      title: `Tender ${new Date().toLocaleDateString()}`,
+      sector: selectedSector?.name || 'General',
+      generatedDate: new Date().toISOString(),
+      categories: criteriaOrder.map((catId) => {
+        const cat = criteriaData.find((c) => c.id === catId);
+        if (!cat) return null;
+        
+        return {
+          id: catId,
+          title: cat.title,
+          subcriteria: (selected[catId] || []).map((subIdx) => {
+            const sub = cat.sub[subIdx];
+            return {
+              label: sub.label,
+              description: sub.description,
+            };
+          }),
+        };
+      }).filter(Boolean),
+    };
+    
+    const jsonString = JSON.stringify(tenderData, null, 2);
+    const data = new Blob([jsonString], { type: 'application/json' });
+    saveAs(data, 'tender_criteria.json');
+    setExporting('');
+    setShowPreviewModal(false);
+  };
+
+  const handlePreview = async () => {
+    if (!user) {
+      alert("Please log in to preview the tender.");
+      navigate("/login");
+      return;
+    }
+    
+    await saveTenderToHistory(true); // Save as draft
+    setShowPreviewModal(true);
   };
 
   const hasCategories = criteriaOrder.length > 0;
