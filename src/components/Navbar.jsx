@@ -187,6 +187,21 @@ export default function Navbar() {
               <span>Home</span>
             </Link>
 
+            {user && (
+              <Link
+                to="/dashboard"
+                onClick={() => setIsMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isActive("/dashboard")
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                }`}
+              >
+                <BarChart3 className="w-5 h-5" />
+                <span>Dashboard</span>
+              </Link>
+            )}
+
             <button
               onClick={() => {
                 setIsMenuOpen(false);
