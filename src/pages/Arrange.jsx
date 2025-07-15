@@ -512,15 +512,124 @@ export default function Arrange() {
             <button
               className={`px-6 py-3 ${
                 user
-                  ? "bg-green-600 hover:bg-green-700"
+                  ? "bg-blue-600 hover:bg-blue-700"
                   : "bg-gray-300 cursor-not-allowed"
               } text-white rounded flex items-center gap-2`}
-              onClick={handlePrint}
+              onClick={handlePreview}
               disabled={!user || saving}
             >
-              <FileText className="w-4 h-4" />
-              {saving ? "Saving..." : "Generate PDF"}
+              <Eye className="w-4 h-4" />
+              {saving ? "Saving..." : "Preview Tender"}
             </button>
+          </div>
+        )}
+        
+        {/* Preview Modal */}
+        {showPreviewModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    Tender Preview
+                  </h3>
+                  <button
+                    onClick={() => setShowPreviewModal(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="mb-4 text-sm text-gray-600">
+                  {selectedSector && (
+                    <p>Sector: <span className="font-semibold">{selectedSector.name}</span></p>
+                  )}
+                  <p>Generated on: {new Date().toLocaleDateString()}</p>
+                </div>
+
+                <div className="max-h-96 overflow-y-auto border rounded-lg p-4 bg-gray-50">
+                  <div className="space-y-6">
+                    {criteriaOrder.map((catId) => {
+                      const cat = criteriaData.find((c) => c.id === catId);
+                      if (!cat) return null;
+
+                      return (
+                        <div key={catId} className="border-b pb-4">
+                          <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                            {cat.title}
+                          </h4>
+                          <div className="space-y-2">
+                            {(selected[catId] || []).map((subIdx) => {
+                              const sub = cat.sub[subIdx];
+                              return (
+                                <div key={subIdx} className="bg-white p-3 rounded">
+                                  <div className="font-medium text-gray-900">
+                                    {sub.label}
+                                  </div>
+                                  <div className="text-sm text-gray-600 mt-1">
+                                    {sub.description}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center mt-6">
+                  <button
+                    onClick={() => setShowPreviewModal(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Close
+                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={generatePDF}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      PDF
+                    </button>
+                    <button
+                      onClick={exportToWord}
+                      disabled={exporting === 'word'}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+                    >
+                      <Download className="w-4 h-4" />
+                      {exporting === 'word' ? 'Exporting...' : 'Word'}
+                    </button>
+                    <button
+                      onClick={exportToExcel}
+                      disabled={exporting === 'excel'}
+                      className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+                    >
+                      <Download className="w-4 h-4" />
+                      {exporting === 'excel' ? 'Exporting...' : 'Excel'}
+                    </button>
+                    <button
+                      onClick={exportToJSON}
+                      disabled={exporting === 'json'}
+                      className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+                    >
+                      <Download className="w-4 h-4" />
+                      {exporting === 'json' ? 'Exporting...' : 'JSON'}
+                    </button>
+                    <button
+                      onClick={() => window.print()}
+                      className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    >
+                      <Printer className="w-4 h-4" />
+                      Print
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
