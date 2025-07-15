@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { 
-  Search, 
-  User, 
-  LogOut, 
-  Menu, 
-  X, 
+import {
+  Search,
+  User,
+  LogOut,
+  Menu,
+  X,
   FileText,
   Home,
   Info,
-  UserCircle
+  UserCircle,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -56,11 +56,11 @@ export default function Navbar() {
               <Home className="w-4 h-4" />
               <span>Home</span>
             </Link>
-            
+
             <Link
-              to="/arrange"
+              to="/select-categories"
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive("/arrange")
+                isActive("/select-categories")
                   ? "text-blue-600 bg-blue-50"
                   : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
               }`}
@@ -164,12 +164,12 @@ export default function Navbar() {
               <Home className="w-5 h-5" />
               <span>Home</span>
             </Link>
-            
+
             <Link
-              to="/arrange"
+              to="/select-categories"
               onClick={() => setIsMenuOpen(false)}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                isActive("/arrange")
+                isActive("/select-categories")
                   ? "text-blue-600 bg-blue-50"
                   : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
               }`}

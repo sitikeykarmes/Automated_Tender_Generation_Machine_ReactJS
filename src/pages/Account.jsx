@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { tenderAPI } from "../api";
 import { criteriaData } from "../data/criteriaData";
-import { 
-  FileText, 
-  Clock, 
-  Download, 
-  Trash2, 
+import {
+  FileText,
+  Clock,
+  Download,
+  Trash2,
   Eye,
   Calendar,
   User,
   Mail,
-  History
+  History,
 } from "lucide-react";
 
 export default function Account() {
@@ -45,7 +45,7 @@ export default function Account() {
     if (window.confirm("Are you sure you want to delete this tender?")) {
       try {
         await tenderAPI.deleteTender(tenderId);
-        setTenderHistory(prev => prev.filter(t => t._id !== tenderId));
+        setTenderHistory((prev) => prev.filter((t) => t._id !== tenderId));
       } catch (err) {
         alert("Failed to delete tender");
       }
@@ -61,7 +61,7 @@ export default function Account() {
     // Convert tender data to the format expected by the PDF generation
     const selected = {};
     const categoriesOrder = tender.categoriesOrder || [];
-    
+
     // Convert Map to object for PDF generation
     if (tender.categories instanceof Map) {
       for (const [key, value] of tender.categories) {
@@ -80,18 +80,22 @@ export default function Account() {
       doc.text(tender.title, 20, y);
       y += 15;
       doc.setFontSize(12);
-      doc.text(`Generated on: ${new Date(tender.createdAt).toLocaleDateString()}`, 20, y);
+      doc.text(
+        `Generated on: ${new Date(tender.createdAt).toLocaleDateString()}`,
+        20,
+        y
+      );
       y += 15;
 
       categoriesOrder.forEach((catId) => {
         const cat = criteriaData.find((c) => c.id === catId);
         if (!cat) return;
-        
+
         doc.setFontSize(14);
         doc.text(cat.title, 20, y);
         y += 10;
         doc.setFontSize(12);
-        
+
         (selected[catId] || []).forEach((subIdx) => {
           const idx = Number(subIdx);
           const sub = cat.sub[idx];
@@ -105,17 +109,17 @@ export default function Account() {
         y += 5;
       });
 
-      doc.save(`${tender.title.replace(/\s+/g, '_')}.pdf`);
+      doc.save(`${tender.title.replace(/\s+/g, "_")}.pdf`);
     });
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -123,7 +127,9 @@ export default function Account() {
     return (
       <div className="max-w-md mx-auto mt-10 p-8 bg-white rounded-lg shadow text-center">
         <h2 className="text-2xl font-bold mb-4">Please Log In</h2>
-        <p className="text-gray-600">You need to be logged in to access your account.</p>
+        <p className="text-gray-600">
+          You need to be logged in to access your account.
+        </p>
       </div>
     );
   }
@@ -139,11 +145,13 @@ export default function Account() {
                 {user.name.charAt(0).toUpperCase()}
               </div>
               <div className="ml-4">
-                <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {user.name}
+                </h2>
                 <p className="text-gray-600">Professional User</p>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-center text-gray-600">
                 <User className="w-5 h-5 mr-3" />
@@ -158,7 +166,7 @@ export default function Account() {
                 <span>Member since {new Date().getFullYear()}</span>
               </div>
             </div>
-            
+
             <button
               onClick={logout}
               className="w-full mt-6 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
@@ -173,7 +181,9 @@ export default function Account() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center mb-6">
               <History className="w-6 h-6 mr-3 text-blue-600" />
-              <h3 className="text-2xl font-bold text-gray-900">Tender History</h3>
+              <h3 className="text-2xl font-bold text-gray-900">
+                Tender History
+              </h3>
             </div>
 
             {loading ? (
@@ -196,7 +206,7 @@ export default function Account() {
                 <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 mb-4">No tenders generated yet</p>
                 <a
-                  href="/"
+                  href="/select-categories"
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Create Your First Tender
@@ -237,16 +247,17 @@ export default function Account() {
                         </button>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center text-sm text-gray-500 mb-2">
                       <Clock className="w-4 h-4 mr-1" />
                       <span>{formatDate(tender.createdAt)}</span>
                     </div>
-                    
+
                     <div className="flex items-center text-sm text-gray-600">
                       <FileText className="w-4 h-4 mr-1" />
                       <span>
-                        {tender.categoriesOrder?.length || 0} categories selected
+                        {tender.categoriesOrder?.length || 0} categories
+                        selected
                       </span>
                     </div>
                   </div>
@@ -273,18 +284,18 @@ export default function Account() {
                   ✕
                 </button>
               </div>
-              
+
               <div className="mb-4 text-sm text-gray-600">
                 Generated on: {formatDate(selectedTender.createdAt)}
               </div>
-              
+
               <div className="space-y-6">
                 {selectedTender.categoriesOrder?.map((catId) => {
                   const cat = criteriaData.find((c) => c.id === catId);
                   if (!cat) return null;
-                  
+
                   const selectedSubs = selectedTender.categories[catId] || [];
-                  
+
                   return (
                     <div key={catId} className="border-b pb-4">
                       <h4 className="text-lg font-semibold text-gray-900 mb-3">
@@ -294,9 +305,12 @@ export default function Account() {
                         {selectedSubs.map((subIdx) => {
                           const sub = cat.sub[Number(subIdx)];
                           if (!sub) return null;
-                          
+
                           return (
-                            <div key={subIdx} className="bg-gray-50 p-3 rounded">
+                            <div
+                              key={subIdx}
+                              className="bg-gray-50 p-3 rounded"
+                            >
                               <div className="font-medium text-gray-900">
                                 {sub.label}
                               </div>
@@ -311,7 +325,7 @@ export default function Account() {
                   );
                 })}
               </div>
-              
+
               <div className="flex justify-end gap-4 mt-6">
                 <button
                   onClick={() => setShowTenderModal(false)}

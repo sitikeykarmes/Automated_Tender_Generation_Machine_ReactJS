@@ -104,15 +104,15 @@ export default function Arrange() {
   // Save tender to history
   const saveTenderToHistory = async () => {
     if (!user) return;
-    
+
     try {
       setSaving(true);
       const tenderData = {
         title: `Tender ${new Date().toLocaleDateString()}`,
         categories: selected,
-        categoriesOrder: criteriaOrder
+        categoriesOrder: criteriaOrder,
       };
-      
+
       await tenderAPI.saveTender(tenderData);
     } catch (error) {
       console.error("Error saving tender:", error);
@@ -224,7 +224,7 @@ export default function Arrange() {
         <div className="flex justify-between mt-8">
           <button
             className="bg-blue-600 text-white px-5 py-2 rounded"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/select-categories")}
           >
             Back &lt;
           </button>

@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { criteriaData } from "../data/criteriaData";
 import CategoryList from "../components/CategoryList";
-import { 
-  CheckCircle, 
-  Users, 
-  FileText, 
-  Clock, 
-  Shield, 
+import {
+  CheckCircle,
+  Users,
+  FileText,
+  Clock,
+  Shield,
   Download,
   Star,
   ArrowRight,
-  Play
+  Play,
 } from "lucide-react";
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
 
   const handleGetStarted = () => {
     if (user) {
-      setShowCategories(true);
+      navigate("/select-categories");
     } else {
       navigate("/login");
     }
@@ -43,40 +43,46 @@ export default function Home() {
     {
       icon: <FileText className="w-8 h-8 text-blue-600" />,
       title: "Automated Generation",
-      description: "Generate professional tender documents automatically with our smart category system."
+      description:
+        "Generate professional tender documents automatically with our smart category system.",
     },
     {
       icon: <Users className="w-8 h-8 text-blue-600" />,
       title: "Collaborative Platform",
-      description: "Work together with your team to create comprehensive tender specifications."
+      description:
+        "Work together with your team to create comprehensive tender specifications.",
     },
     {
       icon: <Clock className="w-8 h-8 text-blue-600" />,
       title: "Time Saving",
-      description: "Reduce tender preparation time from days to minutes with our streamlined process."
+      description:
+        "Reduce tender preparation time from days to minutes with our streamlined process.",
     },
     {
       icon: <Shield className="w-8 h-8 text-blue-600" />,
       title: "Compliance Ready",
-      description: "Ensure all your tenders meet industry standards and regulatory requirements."
+      description:
+        "Ensure all your tenders meet industry standards and regulatory requirements.",
     },
     {
       icon: <Download className="w-8 h-8 text-blue-600" />,
       title: "Instant PDF Export",
-      description: "Export your completed tenders as professional PDF documents instantly."
+      description:
+        "Export your completed tenders as professional PDF documents instantly.",
     },
     {
       icon: <CheckCircle className="w-8 h-8 text-blue-600" />,
       title: "Quality Assurance",
-      description: "Built-in quality checks ensure all criteria are properly documented."
-    }
+      description:
+        "Built-in quality checks ensure all criteria are properly documented.",
+    },
   ];
 
   const stats = [
     { number: "10,000+", label: "Tenders Generated" },
     { number: "500+", label: "Happy Clients" },
     { number: "99.9%", label: "Uptime" },
-    { number: "24/7", label: "Support" }
+    { number: "24/7", label: "Support" },
   ];
 
   const testimonials = [
@@ -84,86 +90,48 @@ export default function Home() {
       name: "Sarah Johnson",
       position: "Procurement Manager",
       company: "TechCorp Solutions",
-      content: "This platform has revolutionized our tender preparation process. What used to take us weeks now takes hours.",
-      rating: 5
+      content:
+        "This platform has revolutionized our tender preparation process. What used to take us weeks now takes hours.",
+      rating: 5,
     },
     {
       name: "Michael Chen",
       position: "Operations Director",
       company: "Global Industries",
-      content: "The automated categorization and professional output have significantly improved our bid success rate.",
-      rating: 5
+      content:
+        "The automated categorization and professional output have significantly improved our bid success rate.",
+      rating: 5,
     },
     {
       name: "Emily Rodriguez",
       position: "Business Development",
       company: "Innovation Ltd",
-      content: "User-friendly interface and comprehensive criteria coverage. Highly recommend for any business.",
-      rating: 5
-    }
+      content:
+        "User-friendly interface and comprehensive criteria coverage. Highly recommend for any business.",
+      rating: 5,
+    },
   ];
 
   const howItWorks = [
     {
       step: "1",
       title: "Select Categories",
-      description: "Choose from comprehensive tender categories including technical, financial, and compliance criteria."
+      description:
+        "Choose from comprehensive tender categories including technical, financial, and compliance criteria.",
     },
     {
       step: "2",
       title: "Customize & Arrange",
-      description: "Drag and drop to arrange your selected criteria in the perfect order for your tender."
+      description:
+        "Drag and drop to arrange your selected criteria in the perfect order for your tender.",
     },
     {
       step: "3",
       title: "Generate PDF",
-      description: "Export your professional tender document with detailed descriptions and formatting."
-    }
+      description:
+        "Export your professional tender document with detailed descriptions and formatting.",
+    },
   ];
-
-  if (showCategories) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Category Selection Section */}
-        <div className="bg-white shadow-sm">
-          <div className="max-w-4xl mx-auto px-4 py-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                Select Your Tender Categories
-              </h1>
-              <p className="text-lg text-gray-600">
-                Choose the categories that best fit your tender requirements
-              </p>
-            </div>
-            
-            <CategoryList
-              data={criteriaData}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            
-            <div className="flex justify-center gap-4 mt-8">
-              <button
-                className="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
-                onClick={() => setShowCategories(false)}
-              >
-                ← Back to Home
-              </button>
-              <button
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
-                onClick={handleNext}
-                disabled={totalSelected === 0}
-              >
-                Continue to Arrange
-                <ArrowRight className="w-4 h-4" />
-                ({totalSelected})
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -176,8 +144,9 @@ export default function Home() {
                 Automate Your Tender Generation Process
               </h1>
               <p className="text-xl mb-8 text-blue-100">
-                Create professional, compliant tender documents in minutes with our intelligent platform. 
-                Streamline your procurement process and win more bids.
+                Create professional, compliant tender documents in minutes with
+                our intelligent platform. Streamline your procurement process
+                and win more bids.
               </p>
               <div className="flex gap-4">
                 <button
@@ -228,14 +197,18 @@ export default function Home() {
               Why Choose Our Platform?
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our comprehensive tender generation platform provides everything you need to create professional, 
-              compliant tender documents quickly and efficiently.
+              Our comprehensive tender generation platform provides everything
+              you need to create professional, compliant tender documents
+              quickly and efficiently.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+              <div
+                key={index}
+                className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+              >
                 <div className="mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   {feature.title}
@@ -255,10 +228,11 @@ export default function Home() {
               How It Works
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our streamlined process makes tender generation simple and efficient
+              Our streamlined process makes tender generation simple and
+              efficient
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {howItWorks.map((item, index) => (
               <div key={index} className="text-center">
@@ -283,23 +257,38 @@ export default function Home() {
               What Our Clients Say
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Join thousands of satisfied customers who have transformed their tender process
+              Join thousands of satisfied customers who have transformed their
+              tender process
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+              <div
+                key={index}
+                className="bg-white p-8 rounded-lg shadow-sm border border-gray-100"
+              >
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    <Star
+                      key={i}
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                    />
                   ))}
                 </div>
-                <p className="text-gray-600 mb-6 italic">"{testimonial.content}"</p>
+                <p className="text-gray-600 mb-6 italic">
+                  "{testimonial.content}"
+                </p>
                 <div>
-                  <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                  <div className="text-sm text-gray-500">{testimonial.position}</div>
-                  <div className="text-sm text-gray-500">{testimonial.company}</div>
+                  <div className="font-semibold text-gray-900">
+                    {testimonial.name}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {testimonial.position}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {testimonial.company}
+                  </div>
                 </div>
               </div>
             ))}
@@ -314,7 +303,8 @@ export default function Home() {
             Ready to Transform Your Tender Process?
           </h2>
           <p className="text-xl mb-8 text-blue-100">
-            Join thousands of professionals who trust our platform for their tender generation needs
+            Join thousands of professionals who trust our platform for their
+            tender generation needs
           </p>
           <button
             onClick={handleGetStarted}

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import SelectCategories from "./pages/SelectCategories";
 import Arrange from "./pages/Arrange";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -17,6 +18,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/select-categories" element={<SelectCategories />} />
           <Route path="/arrange" element={<Arrange />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
