@@ -144,19 +144,21 @@ class BackendTester:
             return False
     
     def test_save_tender(self):
-        """Test saving a tender to history"""
+        """Test saving a tender to history with new sector and isDraft fields"""
         if not self.auth_token:
             self.log_test("Save Tender", False, "No auth token available")
             return False
         
         tender_data = {
             "title": "Software Development Tender",
+            "sector": "Information Technology",
             "categories": {
                 "Technical Expertise": ["0", "1", "3"],
                 "Project Management": ["0", "2"],
                 "Quality Assurance": ["1", "2"]
             },
-            "categoriesOrder": ["Technical Expertise", "Project Management", "Quality Assurance"]
+            "categoriesOrder": ["Technical Expertise", "Project Management", "Quality Assurance"],
+            "isDraft": False
         }
         
         headers = {"Authorization": f"Bearer {self.auth_token}"}
