@@ -11,6 +11,7 @@ import {
   Home,
   Info,
   UserCircle,
+  BarChart3,
 } from "lucide-react";
 
 export default function Navbar() {
