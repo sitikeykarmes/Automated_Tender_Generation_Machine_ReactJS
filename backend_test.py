@@ -276,6 +276,33 @@ class BackendTester:
         except Exception as e:
             self.log_test("Analytics Endpoint", False, f"Request failed: {str(e)}")
             return False
+    
+    def test_get_tender_history(self):
+        """Test retrieving tender history"""
+        if not self.auth_token:
+            self.log_test("Get Tender History", False, "No auth token available")
+            return False
+        
+        headers = {"Authorization": f"Bearer {self.auth_token}"}
+        
+        try:
+            response = requests.get(f"{self.base_url}/tenders/history", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_test("Get Tender History", True, f"Retrieved {len(data)} tenders from history")
+                    return True
+                else:
+                    self.log_test("Get Tender History", False, "Response is not an array", data)
+                    return False
+            else:
+                self.log_test("Get Tender History", False, f"Request failed with status {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Get Tender History", False, f"Request failed: {str(e)}")
+            return False
         """Test retrieving tender history"""
         if not self.auth_token:
             self.log_test("Get Tender History", False, "No auth token available")
