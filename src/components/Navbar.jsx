@@ -58,6 +58,20 @@ export default function Navbar() {
               <span>Home</span>
             </Link>
 
+            {user && (
+              <Link
+                to="/dashboard"
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive("/dashboard")
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span>Dashboard</span>
+              </Link>
+            )}
+
             <button
               onClick={() => {
                 if (user) {
