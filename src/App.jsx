@@ -6,11 +6,11 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Account from "./pages/Account";
 import Dashboard from "./pages/Dashboard";
+import GoogleOAuthSuccess from "./pages/GoogleOAuthSuccess";
+import GoogleOAuthError from "./pages/GoogleOAuthError";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedData from "../src/components/ProtectedData";
 import Navbar from "./components/Navbar";
-// ... inside your component tree:
-<ProtectedData />;
 
 function App() {
   return (
@@ -25,6 +25,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/account" element={<Account />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/auth/google/success" element={<GoogleOAuthSuccess />} />
+          <Route path="/auth/google/error" element={<GoogleOAuthError />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
