@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Suite for Automated Tender Generation Application
-Tests all authentication and tender management endpoints
+Backend API Testing Suite for Google OAuth Implementation
+Tests Google OAuth authentication and existing authentication endpoints
 """
 
 import requests
 import json
 import sys
 from datetime import datetime
+import urllib.parse
 
 # Base URL for the backend API
 BASE_URL = "http://localhost:5000/api"
