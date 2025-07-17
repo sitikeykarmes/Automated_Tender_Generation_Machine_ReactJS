@@ -60,7 +60,10 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = () => alert("Sign in with Google");
+  const handleGoogleLogin = () => {
+    // Redirect to backend Google OAuth route
+    window.location.href = 'http://localhost:5000/api/auth/google';
+  };
   const handleFacebookLogin = () => alert("Sign in with Facebook");
 
   return (
