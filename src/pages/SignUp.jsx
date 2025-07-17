@@ -189,7 +189,7 @@ export default function SignUp() {
           <div className="space-y-3">
             <button
               type="button"
-              onClick={() => alert("Sign up with Google")}
+              onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
               className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200"
             >
               <GoogleIcon />
