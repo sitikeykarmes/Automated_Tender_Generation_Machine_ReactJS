@@ -113,7 +113,7 @@ export default function SelectCategories() {
                     <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
                   </div>
                   <p className="text-sm text-gray-600 mt-2">
-                    Specialized criteria for {sector.name.toLowerCase()} tenders
+                    {sector.description}
                   </p>
                 </button>
               ))}
