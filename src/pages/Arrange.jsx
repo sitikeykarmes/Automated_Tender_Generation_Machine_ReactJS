@@ -288,7 +288,7 @@ export default function Arrange() {
                   ]
                 : []),
               ...criteriaOrder.flatMap((catId) => {
-                const cat = criteriaData.find((c) => c.id === catId);
+                const cat = findCriteriaById(catId, selectedSector?.id);
                 if (!cat) return [];
                 return [
                   new Paragraph({
