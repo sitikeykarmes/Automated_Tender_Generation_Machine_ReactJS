@@ -244,7 +244,7 @@ export default function Arrange() {
         sector: selectedSector?.name || "General",
         generatedDate: new Date().toISOString(),
         categories: criteriaOrder.map((catId) => {
-          const cat = criteriaData.find((c) => c.id === catId);
+          const cat = findCriteriaById(catId, selectedSector?.id);
           if (!cat) return null;
           return {
             id: cat.id,
