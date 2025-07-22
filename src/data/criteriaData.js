@@ -1738,3 +1738,19 @@ export const criteriaData = {
     },
   ],
 };
+
+// Create sectors array from criteriaData keys
+export const sectors = [
+  { id: 'government', name: 'Government', description: 'Government sector tenders and public procurement' },
+  { id: 'business', name: 'Business', description: 'Business-to-business commercial tenders' },
+  { id: 'healthcare', name: 'Healthcare', description: 'Healthcare and medical industry tenders' },
+  { id: 'companies', name: 'Companies', description: 'Corporate and enterprise tenders' },
+  { id: 'construction', name: 'Construction', description: 'Construction and infrastructure projects' },
+  { id: 'transportation', name: 'Transportation', description: 'Transportation and logistics tenders' },
+  { id: 'it', name: 'Information Technology', description: 'IT and technology services tenders' },
+  { id: 'retail', name: 'Retail', description: 'Retail and consumer goods tenders' },
+  { id: 'manufacturing', name: 'Manufacturing', description: 'Manufacturing and industrial tenders' },
+  { id: 'housing', name: 'Housing', description: 'Housing and real estate development' },
+  { id: 'education', name: 'Education', description: 'Educational institutions and services' },
+  { id: 'consultancy', name: 'Consultancy', description: 'Consulting and professional services' }
+];
