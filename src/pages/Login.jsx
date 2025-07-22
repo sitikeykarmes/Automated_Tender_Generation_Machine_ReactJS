@@ -62,7 +62,7 @@ export default function Login() {
 
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth route
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    window.location.href = "http://localhost:5000/api/auth/google";
   };
   const handleFacebookLogin = () => alert("Sign in with Facebook");
 
