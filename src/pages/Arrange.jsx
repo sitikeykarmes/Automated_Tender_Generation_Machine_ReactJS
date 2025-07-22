@@ -218,7 +218,7 @@ export default function Arrange() {
       const workbook = XLSX.utils.book_new();
       const worksheetData = [["Category", "Subcriteria", "Description"]];
       criteriaOrder.forEach((catId) => {
-        const cat = criteriaData.find((c) => c.id === catId);
+        const cat = findCriteriaById(catId, selectedSector?.id);
         if (!cat) return;
         (selected[catId] || []).forEach((subIdx) => {
           const sub = cat.sub[subIdx];
