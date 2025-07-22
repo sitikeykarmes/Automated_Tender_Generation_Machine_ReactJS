@@ -3,6 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { tenderAPI } from "../api";
 import { criteriaData } from "../data/criteriaData";
+
+// Helper function to find criteria by ID across all sectors
+const findCriteriaById = (criteriaId, sector = null) => {
+  if (sector && criteriaData[sector]) {
+    return criteriaData[sector].find(c => c.id === criteriaId);
+  }
+  
+  // If no sector specified, search through all sectors
+  for (const sectorKey in criteriaData) {
+    const found = criteriaData[sectorKey].find(c => c.id === criteriaId);
+    if (found) return found;
+  }
+  return null;
+};
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
