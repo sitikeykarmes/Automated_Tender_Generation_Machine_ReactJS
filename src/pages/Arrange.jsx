@@ -449,7 +449,7 @@ export default function Arrange() {
               {/* Preview Categories */}
               <div className="space-y-5 mb-6">
                 {criteriaOrder.map((catId) => {
-                  const cat = criteriaData.find((c) => c.id === catId);
+                  const cat = findCriteriaById(catId, selectedSector?.id);
                   if (!cat) return null;
 
                   return (
