@@ -52,20 +52,20 @@ export default function SelectCategories() {
   // Get prioritized criteria data based on selected sector
   const getPrioritizedCriteria = () => {
     if (!selectedSector) return criteriaData;
-    
+
     const priorityOrder = selectedSector.priority;
     const prioritized = [];
     const remaining = [];
 
-    priorityOrder.forEach(categoryId => {
-      const category = criteriaData.find(c => c.id === categoryId);
+    priorityOrder.forEach((categoryId) => {
+      const category = criteriaData.find((c) => c.id === categoryId);
       if (category) {
         prioritized.push(category);
       }
     });
 
     // Add any remaining categories not in priority list
-    criteriaData.forEach(category => {
+    criteriaData.forEach((category) => {
       if (!priorityOrder.includes(category.id)) {
         remaining.push(category);
       }
@@ -81,13 +81,14 @@ export default function SelectCategories() {
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {!selectedSector ? "Select Your Sector" : "Select Your Tender Categories"}
+              {!selectedSector
+                ? "Select Your Sector"
+                : "Select Your Tender Categories"}
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {!selectedSector 
+              {!selectedSector
                 ? "Choose the sector that best fits your tender to get relevant templates and prioritized criteria."
-                : `${selectedSector.name} tender categories prioritized for your needs.`
-              }
+                : `${selectedSector.name} tender categories prioritized for your needs.`}
             </p>
             {selectedSector && (
               <div className="mt-6 flex justify-center items-center gap-4">
@@ -157,7 +158,7 @@ export default function SelectCategories() {
                 ← Change Sector
               </button>
             </div>
-            
+
             <CategoryList
               data={getPrioritizedCriteria()}
               selected={selected}
