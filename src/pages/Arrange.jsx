@@ -335,7 +335,7 @@ export default function Arrange() {
               <SortableContext items={criteriaOrder} strategy={verticalListSortingStrategy}>
                 <div className="space-y-6 mb-6">
                   {criteriaOrder.map((catId) => {
-                    const cat = criteriaData.find((c) => c.id === catId);
+                    const cat = findCriteriaById(catId, selectedSector?.id);
                     if (!cat) return null;
                     return (
                       <SortableItem key={catId} id={catId}>
