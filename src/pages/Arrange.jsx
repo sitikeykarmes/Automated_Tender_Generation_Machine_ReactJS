@@ -277,12 +277,12 @@ export default function Arrange() {
                 heading: HeadingLevel.TITLE,
               }),
               new Paragraph({
-                text: Generated on: ${new Date().toLocaleDateString()},
+                text: `Generated on: ${new Date().toLocaleDateString()}`,
               }),
               ...(selectedSector
                 ? [
                     new Paragraph({
-                      text: Sector: ${selectedSector.name},
+                      text: `Sector: ${selectedSector.name}`,
                       bold: true,
                     }),
                   ]
