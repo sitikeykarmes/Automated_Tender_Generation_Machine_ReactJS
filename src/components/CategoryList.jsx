@@ -1,7 +1,7 @@
 import React from "react";
 import CategoryItem from "./CategoryItem";
 
-export default function CategoryList({ data, selected, setSelected, priorityOrder = [] }) {
+export default function CategoryList({ data, selected, setSelected }) {
   const handleSubcriteriaChange = (catId, subIdx) => {
     setSelected((prev) => {
       const prevSubs = prev[catId] || [];
