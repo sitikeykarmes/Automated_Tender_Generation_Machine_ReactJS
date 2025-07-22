@@ -102,7 +102,7 @@ export default function Account() {
       y += 15;
 
       categoriesOrder.forEach((catId) => {
-        const cat = criteriaData.find((c) => c.id === catId);
+        const cat = findCriteriaById(catId, tender.sector);
         if (!cat) return;
 
         doc.setFontSize(14);
