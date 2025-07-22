@@ -240,7 +240,7 @@ export default function Arrange() {
   const exportToJSON = () =>
     guardDownload(() => {
       const data = {
-        title: Tender ${new Date().toLocaleDateString()},
+        title: `Tender ${new Date().toLocaleDateString()}`,
         sector: selectedSector?.name || "General",
         generatedDate: new Date().toISOString(),
         categories: criteriaOrder.map((catId) => {
