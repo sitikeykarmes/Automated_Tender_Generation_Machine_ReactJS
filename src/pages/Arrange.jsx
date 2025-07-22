@@ -150,7 +150,7 @@ export default function Arrange() {
     setSaving(true);
     try {
       await tenderAPI.saveTender({
-        title: Tender ${new Date().toLocaleDateString()},
+        title: `Tender ${new Date().toLocaleDateString()}`,
         sector: selectedSector?.id || "general",
         categories: selected,
         categoriesOrder: criteriaOrder,
