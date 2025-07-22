@@ -141,10 +141,9 @@ export default function SelectCategories() {
             </div>
 
             <CategoryList
-              data={getPrioritizedCriteria()}
+              data={getSectorCriteria()}
               selected={selected}
               setSelected={setSelected}
-              priorityOrder={selectedSector.priority}
             />
           </div>
         )}
