@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SubcriteriaDropdown from "./SubcriteriaDropdown";
 import { Star } from "lucide-react";
 
-export default function CategoryItem({ cat, selected, onSubcriteriaChange, isPriority = false, priorityIndex = -1 }) {
+export default function CategoryItem({ cat, selected, onSubcriteriaChange }) {
   const [open, setOpen] = useState(false);
 
   return (
