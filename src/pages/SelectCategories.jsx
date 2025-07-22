@@ -49,29 +49,10 @@ export default function SelectCategories() {
     localStorage.removeItem("selectedcat");
   };
 
-  // Get prioritized criteria data based on selected sector
-  const getPrioritizedCriteria = () => {
-    if (!selectedSector) return criteriaData;
-
-    const priorityOrder = selectedSector.priority;
-    const prioritized = [];
-    const remaining = [];
-
-    priorityOrder.forEach((categoryId) => {
-      const category = criteriaData.find((c) => c.id === categoryId);
-      if (category) {
-        prioritized.push(category);
-      }
-    });
-
-    // Add any remaining categories not in priority list
-    criteriaData.forEach((category) => {
-      if (!priorityOrder.includes(category.id)) {
-        remaining.push(category);
-      }
-    });
-
-    return [...prioritized, ...remaining];
+  // Get criteria data based on selected sector
+  const getSectorCriteria = () => {
+    if (!selectedSector) return [];
+    return criteriaData[selectedSector.id] || [];
   };
 
   return (
