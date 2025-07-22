@@ -193,7 +193,7 @@ export default function Arrange() {
         doc.text(Generated on: ${new Date().toLocaleDateString()}, 20, y);
         y += 15;
         criteriaOrder.forEach((catId) => {
-          const cat = criteriaData.find((c) => c.id === catId);
+          const cat = findCriteriaById(catId, selectedSector?.id);
           if (!cat) return;
           doc.setFontSize(14);
           doc.text(cat.title, 20, y);
