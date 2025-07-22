@@ -69,7 +69,7 @@ export default function SelectCategories() {
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               {!selectedSector
                 ? "Choose the sector that best fits your tender to get relevant templates and prioritized criteria."
-                : `${selectedSector.name} tender categories prioritized for your needs.`}
+                : `${selectedSector.name} tender categories for your selection.`}
             </p>
             {selectedSector && (
               <div className="mt-6 flex justify-center items-center gap-4">
