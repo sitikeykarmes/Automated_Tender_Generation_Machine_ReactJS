@@ -128,9 +128,6 @@ export default function SelectCategories() {
                 <span className="text-lg font-semibold text-gray-900">
                   {selectedSector.name}
                 </span>
-                <span className="text-sm text-gray-500">
-                  (Categories prioritized for this sector)
-                </span>
               </div>
               <button
                 onClick={handleBackToSector}
