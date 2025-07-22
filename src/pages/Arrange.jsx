@@ -187,10 +187,10 @@ export default function Arrange() {
         y += 10;
         if (selectedSector) {
           doc.setFontSize(12);
-          doc.text(Sector: ${selectedSector.name}, 20, y);
+          doc.text(`Sector: ${selectedSector.name}`, 20, y);
           y += 10;
         }
-        doc.text(Generated on: ${new Date().toLocaleDateString()}, 20, y);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, y);
         y += 15;
         criteriaOrder.forEach((catId) => {
           const cat = findCriteriaById(catId, selectedSector?.id);
