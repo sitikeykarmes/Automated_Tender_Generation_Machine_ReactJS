@@ -305,7 +305,7 @@ export default function Account() {
 
               <div className="space-y-6">
                 {selectedTender.categoriesOrder?.map((catId) => {
-                  const cat = criteriaData.find((c) => c.id === catId);
+                  const cat = findCriteriaById(catId, selectedTender.sector);
                   if (!cat) return null;
 
                   const selectedSubs = selectedTender.categories[catId] || [];
