@@ -152,7 +152,9 @@ router.get(
       };
 
       // Get frontend URL based on environment
-      const frontendURL = process.env.FRONTEND_URL || "http://localhost:5173";
+      const frontendURL =
+        process.env.FRONTEND_URL ||
+        "https://automated-tender-generation-machine.vercel.app";
 
       // Redirect to frontend with token and user data as URL parameters
       res.redirect(
@@ -162,7 +164,9 @@ router.get(
       );
     } catch (error) {
       console.error("Google OAuth callback error:", error);
-      const frontendURL = process.env.FRONTEND_URL || "http://localhost:5173";
+      const frontendURL =
+        process.env.FRONTEND_URL ||
+        "https://automated-tender-generation-machine.vercel.app";
       res.redirect(
         `${frontendURL}/auth/google/error?error=${encodeURIComponent(
           error.message
