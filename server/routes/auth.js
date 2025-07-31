@@ -136,11 +136,15 @@ router.get('/google/callback',
         profilePicture: req.user.profilePicture
       };
       
+      // Get frontend URL based on environment
+      const frontendURL = process.env.FRONTEND_URL || 'http://localhost:5173';
+      
       // Redirect to frontend with token and user data as URL parameters
-      res.redirect(`http://localhost:5173/auth/google/success?token=${token}&user=${encodeURIComponent(JSON.stringify(userInfo))}`);
+      res.redirect(`${frontendURL}/auth/google/success?token=${token}&user=${encodeURIComponent(JSON.stringify(userInfo))}`);
     } catch (error) {
       console.error("Google OAuth callback error:", error);
-      res.redirect(`http://localhost:5173/auth/google/error?error=${encodeURIComponent(error.message)}`);
+      const frontendURL = process.env.FRONTEND_URL || 'http://localhost:5173';
+      res.redirect(`${frontendURL}/auth/google/error?error=${encodeURIComponent(error.message)}`);
     }
   }
 );
