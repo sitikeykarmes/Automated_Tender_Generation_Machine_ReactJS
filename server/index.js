@@ -8,15 +8,17 @@ const passport = require("passport");
 const app = express();
 
 // Session configuration for Google OAuth
-app.use(session({
-  secret: process.env.JWT_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: { 
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -29,21 +31,22 @@ const corsOptions = {
   origin: [
     "http://localhost:5173", // Local development
     "http://localhost:3000", // Local development alternative
-    process.env.FRONTEND_URL || "https://tender-generator-frontend.vercel.app" // Production frontend URL
+    process.env.FRONTEND_URL ||
+      "https://automated-tender-generation-machine.vercel.app/", // Production frontend URL
   ],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
 
 // Health check endpoint
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Tender Generator Backend API is running!',
-    status: 'healthy',
-    timestamp: new Date().toISOString()
+app.get("/", (req, res) => {
+  res.json({
+    message: "Tender Generator Backend API is running!",
+    status: "healthy",
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -63,12 +66,12 @@ app.use("/api/tenders", tenderRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  res.status(500).json({ message: "Something went wrong!" });
 });
 
 // 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
 const PORT = process.env.PORT || 5000;
