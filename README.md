@@ -10,6 +10,119 @@ Deploy your Tender Generator application with:
 
 ---
 
+## 🏠 LOCAL DEVELOPMENT SETUP
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- Git
+
+### Step 1: Clone Repository
+
+```bash
+git clone https://github.com/sitikeykarmes/Automated_Tender_Generation_Machine_ReactJS.git
+cd Automated_Tender_Generation_Machine_ReactJS
+```
+
+### Step 2: Backend Setup (Local)
+
+1. Navigate to backend directory:
+
+```bash
+cd server
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create `.env` file in `server` directory:
+
+```env
+NODE_ENV=development
+MONGO_URI=mongodb+srv://your-username:your-password@cluster0.tdwlgsp.mongodb.net/
+JWT_SECRET=your-jwt-secret-for-local-dev
+GOOGLE_CLIENT_ID=your-google-client-ID
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+FRONTEND_URL=http://localhost:5173
+PORT=5000
+```
+
+4. Start backend server:
+
+```bash
+node index.js
+```
+
+**Default Backend URL**: `http://localhost:5000`
+
+### Step 3: Frontend Setup (Local)
+
+1. Navigate back to root directory:
+
+```bash
+cd ..
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create `.env` file in frontend root directory:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+VITE_APP_ENV=development
+```
+
+4. Start frontend development server:
+
+```bash
+npm run dev
+```
+
+**Default Frontend URL**: `http://localhost:5173`
+
+### Step 4: Update Google OAuth for Local Development
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Navigate to APIs & Services → Credentials
+3. Edit your OAuth 2.0 Client ID
+4. Add to **Authorized redirect URIs**:
+   ```
+   http://localhost:5000/api/auth/google/callback
+   ```
+5. Add to **Authorized JavaScript origins**:
+   ```
+   http://localhost:5000
+   http://localhost:5173
+   ```
+
+### Step 5: Test Local Setup
+
+1. Backend: Visit `http://localhost:5000` - should show API status
+2. Frontend: Visit `http://localhost:5173` - should load the app
+3. Test user registration, login, and Google OAuth
+
+### 🔄 Switching Between Local and Production
+
+#### For Local Development:
+
+- **Backend .env**: `FRONTEND_URL=http://localhost:5173`
+- **Frontend .env**: `VITE_API_BASE_URL=http://localhost:5000/api`
+
+#### For Production Deployment:
+
+- **Backend (Render)**: `FRONTEND_URL=https://your-vercel-app-name.vercel.app`
+- **Frontend (Vercel)**: `VITE_API_BASE_URL=https://your-render-backend-url.onrender.com/api`
+
+---
+
 ## 🎯 BACKEND DEPLOYMENT (Render)
 
 ### Step 1: Connect GitHub Repository
@@ -24,9 +137,9 @@ Deploy your Tender Generator application with:
 - **Name**: `automated-tender-generation-machine` (Change as per your wish)
 - **Environment**: `Node`
 - **Branch**: `main` (or your default branch)
-- **Root Directory**: server
-- **Build Command**: `server && npm install`
-- **Start Command**: `server && node index.js`
+- **Root Directory**: `server`
+- **Build Command**: `npm install`
+- **Start Command**: `node index.js`
 
 ### Step 3: Set Environment Variables
 
@@ -39,6 +152,7 @@ JWT_SECRET=your-jwt-secret
 GOOGLE_CLIENT_ID=your-google-client-ID
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 FRONTEND_URL=https://your-vercel-app-name.vercel.app
+PORT=10000
 ```
 
 **Important**: Replace `your-vercel-app-name` with your actual Vercel app name after frontend deployment.
@@ -63,7 +177,7 @@ FRONTEND_URL=https://your-vercel-app-name.vercel.app
 ### Step 2: Configure Project Settings
 
 - **Framework**: Vite (auto-detected)
-- **Root Directory**: Leave as `.` (root)
+- **Root Directory**: Leave as `.` (root) or set to `client` if frontend is in subdirectory
 - **Build Command**: `npm run build`
 - **Output Directory**: `dist`
 
@@ -110,10 +224,6 @@ FRONTEND_URL=https://your-actual-vercel-app-name.vercel.app
    https://your-render-backend-url.onrender.com
    https://your-vercel-app-name.vercel.app
    ```
-6. Add to **App Domain**:
-   ```
-   https://your-vercel-app-name.vercel.app
-   ```
 
 ---
 
@@ -122,6 +232,10 @@ FRONTEND_URL=https://your-actual-vercel-app-name.vercel.app
 ### 1. Backend Health Check
 
 ```bash
+# Local
+curl http://localhost:5000/
+
+# Production
 curl https://your-render-backend-url.onrender.com/
 ```
 
@@ -129,7 +243,10 @@ Should return: `{"message":"Tender Generator Backend API is running!","status":"
 
 ### 2. Frontend Access
 
-Visit your Vercel URL and test:
+**Local**: Visit `http://localhost:5173`
+**Production**: Visit your Vercel URL
+
+Test checklist:
 
 - ✅ Page loads correctly
 - ✅ User registration works
@@ -140,13 +257,20 @@ Visit your Vercel URL and test:
 
 ### 3. Google OAuth Test
 
-1. Click "Sign in with Google" on your deployed app
+1. Click "Sign in with Google" on your app
 2. Should redirect to Google login
 3. After login, should redirect back to your app with success
 
 ---
 
 ## ⚡ IMPORTANT NOTES
+
+### Local Development
+
+- Backend runs on `http://localhost:5000` by default
+- Frontend runs on `http://localhost:5173` by default (Vite)
+- MongoDB Atlas works for both local and production
+- Use different Google OAuth settings for local vs production
 
 ### Cold Starts (Render Free Tier)
 
@@ -156,14 +280,14 @@ Visit your Vercel URL and test:
 
 ### MongoDB Atlas
 
-- Ensure IP whitelist includes `0.0.0.0/0` for Render
-- Or add specific Render IP ranges
+- Ensure IP whitelist includes `0.0.0.0/0` for both Render and local development
+- Or add specific IP ranges for both environments
 
 ### HTTPS & Security
 
-- Both platforms use HTTPS automatically
-- Session cookies configured for production
-- CORS properly configured for both domains
+- Production: Both platforms use HTTPS automatically
+- Local: Uses HTTP (standard for development)
+- Session cookies configured appropriately for each environment
 
 ---
 
@@ -175,44 +299,65 @@ Visit your Vercel URL and test:
 
 - **Frontend**: Check if all dependencies are in `package.json`
 - **Backend**: Ensure Node.js version compatibility
-- **Solution**: Check build logs in platform dashboards
+- **Solution**: Check build logs in platform dashboards or terminal
 
 #### 2. API Connection Errors
 
 - **Issue**: Frontend can't reach backend
-- **Check**: Environment variables are correct
-- **Solution**: Verify `VITE_API_BASE_URL` matches backend URL
+- **Local**: Check if backend is running on correct port
+- **Production**: Verify environment variables are correct
+- **Solution**: Verify API base URLs match backend URLs
 
 #### 3. Google OAuth Redirect Issues
 
 - **Issue**: OAuth callback fails
-- **Check**: Google Cloud Console redirect URIs
-- **Solution**: Ensure all URLs are added to Google OAuth settings
+- **Check**: Google Cloud Console redirect URIs for both environments
+- **Solution**: Ensure both local and production URLs are added
 
 #### 4. CORS Errors
 
 - **Issue**: Cross-origin requests blocked
-- **Check**: Backend CORS configuration
-- **Solution**: Verify frontend URL is in backend CORS origins
+- **Local**: Backend should allow `http://localhost:5173`
+- **Production**: Backend should allow your Vercel domain
+- **Solution**: Check CORS configuration in backend
 
 #### 5. Database Connection
 
 - **Issue**: MongoDB connection fails
-- **Check**: MongoDB Atlas IP whitelist
-- **Solution**: Add `0.0.0.0/0` or specific Render IPs
+- **Check**: MongoDB Atlas IP whitelist and connection string
+- **Solution**: Ensure local IP and `0.0.0.0/0` are whitelisted
+
+#### 6. Environment Variables Not Loading
+
+- **Local**: Ensure `.env` files are in correct directories
+- **Production**: Check platform environment variable settings
+- **Solution**: Restart servers after changing environment variables
 
 ### Debug Commands:
 
 ```bash
-# Check backend logs (Render dashboard)
-# Check frontend logs (Vercel dashboard)
+# Check if backend is running
+curl http://localhost:5000/
+
+# Check frontend build
+npm run build
+
+# Check environment variables (Node.js)
+console.log(process.env.NODE_ENV)
+
 # Check browser dev tools for client errors
-# Test API endpoints individually
+# Check terminal logs for server errors
 ```
 
 ---
 
 ## 📈 PERFORMANCE OPTIMIZATION
+
+### Local Development
+
+- Use `npm run dev` for hot reloading
+- Enable source maps for debugging
+- Use development builds for faster compilation
 
 ### Frontend (Vercel)
 
@@ -228,16 +373,70 @@ Visit your Vercel URL and test:
 
 ---
 
+## 🔧 DEVELOPMENT WORKFLOW
+
+### Recommended Development Process:
+
+1. **Start Local Development**:
+
+   ```bash
+   # Terminal 1 - Backend
+   cd server
+   npm run dev
+
+   # Terminal 2 - Frontend
+   cd client  # or stay in root if frontend is there
+   npm run dev
+   ```
+
+2. **Test Locally**: Develop and test all features on `localhost`
+
+3. **Deploy to Production**: Push to GitHub, which triggers automatic deployments
+
+4. **Update Environment Variables**: Switch URLs for production deployment
+
+### Git Workflow:
+
+```bash
+# Make changes locally
+git add .
+git commit -m "Your commit message"
+git push origin main
+
+# Automatic deployment triggers on both Vercel and Render
+```
+
+---
+
 ## 🎉 DEPLOYMENT COMPLETE!
 
-After following these steps, your Tender Generator application will be:
+After following these steps, your Tender Generator application will be available in both environments:
 
-- ✅ Deployed and accessible worldwide
+### Local Development:
+
+- ✅ **Frontend**: `http://localhost:5173`
+- ✅ **Backend**: `http://localhost:5000`
+- ✅ Hot reloading enabled
+- ✅ Development-optimized builds
+
+### Production Deployment:
+
+- ✅ **Frontend**: `https://your-app-name.vercel.app`
+- ✅ **Backend**: `https://your-backend-name.onrender.com`
 - ✅ HTTPS secured
+- ✅ Production optimized
+- ✅ Global CDN delivery
+
+Both environments will have:
+
 - ✅ Google OAuth functional
 - ✅ Database connected
 - ✅ API endpoints working
-- ✅ Production optimized
+- ✅ Cross-origin requests configured
 
-**Frontend URL**: `https://your-app-name.vercel.app`
-**Backend URL**: `https://your-backend-name.onrender.com`
+### Quick Reference URLs:
+
+| Environment    | Frontend                      | Backend                         |
+| -------------- | ----------------------------- | ------------------------------- |
+| **Local**      | `http://localhost:5173`       | `http://localhost:5000`         |
+| **Production** | `https://your-app.vercel.app` | `https://your-app.onrender.com` |
