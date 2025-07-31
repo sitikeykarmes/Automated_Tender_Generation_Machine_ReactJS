@@ -41,11 +41,14 @@ export default function Login() {
     e.preventDefault();
     if (!validateInputs()) return;
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: username, password }),
-      });
+      const res = await fetch(
+        "https://automated-tender-generation-machine.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: username, password }),
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         login(data.user, data.token); // Save user and token in context/localStorage
@@ -62,7 +65,8 @@ export default function Login() {
 
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth route
-    window.location.href = "http://localhost:5000/api/auth/google";
+    window.location.href =
+      "https://automated-tender-generation-machine.onrender.com/api/auth/google";
   };
   const handleFacebookLogin = () => alert("Sign in with Facebook");
 

@@ -48,11 +48,14 @@ export default function SignUp() {
     e.preventDefault();
     if (!validateInputs()) return;
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const res = await fetch(
+        "https://automated-tender-generation-machine.onrender.com/api/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         login(data.user, data.token); // Save user and token in context/localStorage
@@ -189,7 +192,10 @@ export default function SignUp() {
           <div className="space-y-3">
             <button
               type="button"
-              onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
+              onClick={() =>
+                (window.location.href =
+                  "https://automated-tender-generation-machine.onrender.com/api/auth/google")
+              }
               className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200"
             >
               <GoogleIcon />
