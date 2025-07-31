@@ -8,9 +8,12 @@ export default function ProtectedData() {
     const fetchProtected = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get("http://localhost:5000/api/protected", {
-          headers: { Authorization: token },
-        });
+        const res = await axios.get(
+          "https://automated-tender-generation-machine.onrender.com/api/protected",
+          {
+            headers: { Authorization: token },
+          }
+        );
         setMessage(res.data.msg);
       } catch (err) {
         setMessage("Access denied or not logged in.");
