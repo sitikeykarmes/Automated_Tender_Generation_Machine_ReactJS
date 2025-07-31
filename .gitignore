@@ -89,3 +89,8 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+
+README-DEPLOYMENT.md
+DEPLOYMENT-STEPS.md
+test_result.md
